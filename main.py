@@ -19,25 +19,6 @@ def is_wall(walls, button, sensor, neighborY, neighborX):
     return False
 
 
-def print_grid(walls, currentY, currentX, startY, startX, finishY, finishX):
-    print()
-    os.system('clear')
-    for i in range(0, SIZE_Y):
-        for j in range(0, SIZE_X):
-            if walls[i][j]:
-                print("X", end="")
-            elif i == currentY and j == currentX:
-                print("P", end="")
-            elif i == startY and j == startX:
-                print("S", end="")
-            elif i == finishY and j == finishX:
-                print("F", end="")
-            else:
-                print("0", end="")
-        print()
-    return
-
-
 def calculate_h_cost(currentY, currentX, finishY, finishX):
     y = (finishY - currentY)
     x = (finishX - currentX)
