@@ -18,7 +18,7 @@ SIZE_X = 4
 def is_wall(walls, button, sensor, neighborY, neighborX):
     while button.pressed() == False:
         x = 1
-    if sensor.distance(False) < 70:
+    if sensor.distance(False) <= 100:
         walls[neighborY][neighborX] = 1
         return True
     return False
@@ -100,14 +100,14 @@ def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, 
         ev3.speaker.beep(523.25, 250)
         ev3.speaker.beep(392.00, 250)
         ev3.speaker.beep(329.63, 250)
-        ev3.speaker.beep(261.63, 250)
+        ev3.speaker.beep(261.63, 250)  # checking for walls
         if is_wall(walls, button, sensor, neighborY, neighborX):
             ev3.speaker.beep(261.63, 500)
-            ev3.speaker.beep(523.25, 500)
+            ev3.speaker.beep(523.25, 500)  # there is a wall
             return
         else:
             ev3.speaker.beep(523.25, 500)
-            ev3.speaker.beep(261.63, 500)
+            ev3.speaker.beep(261.63, 500)  # there isn't a wall
     else:
         if walls[neighborY][neighborX]:
             return
@@ -148,10 +148,10 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
         closedX.append(currentX)
         if currentY == finishY and currentX == finishX:
             break
-        ev3.speaker.beep(261.63, 250)
-        ev3.speaker.beep(329.63, 250)
-        ev3.speaker.beep(392.00, 250)
-        ev3.speaker.beep(523.25, 250)
+        # ev3.speaker.beep(261.63, 250)
+        # ev3.speaker.beep(329.63, 250)
+        # ev3.speaker.beep(392.00, 250)
+        # ev3.speaker.beep(523.25, 250)
         neighborY = currentY - 1
         neighborX = currentX
         calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3)
@@ -185,22 +185,22 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
         currentX = parentListX[originalY][originalX]
 
         if currentY < originalY:
-            ev3.speaker.beep(261.63, 250)
-            motors.straight(255)
+            # ev3.speaker.beep(261.63, 250)
+            motors.straight(270)
         if currentX > originalX:
-            ev3.speaker.beep(329.63, 250)
+            # ev3.speaker.beep(329.63, 250)
             motors.turn(90)
-            motors.straight(255)
+            motors.straight(270)
             motors.turn(-90)
         if currentY > originalY:
-            ev3.speaker.beep(392.00, 250)
+            # ev3.speaker.beep(392.00, 250)
             motors.turn(180)
-            motors.straight(255)
+            motors.straight(270)
             motors.turn(-180)
         if currentX < originalX:
-            ev3.speaker.beep(523.25, 250)
+            # ev3.speaker.beep(523.25, 250)
             motors.turn(-90)
-            motors.straight(255)
+            motors.straight(270)
             motors.turn(90)
        
         ev3.speaker.beep(130.81, 500)
@@ -267,11 +267,6 @@ fCostList = [
         [2000, 2000, 2000, 2000]
         ]
 
-startY = 0
-startX = 0
-
-finishY = 3
-finishX = 3
 
 levy = Motor(Port.A)
 pravy = Motor(Port.D)
@@ -284,20 +279,17 @@ button = TouchSensor(Port.S2)
 
 sensor = UltrasonicSensor(Port.S1)
 
-ev3.speaker.beep(261.63, 500)
 
+ev3.speaker.beep(130.81, 500)  # code upload done
 while(button.pressed() == False):
     x = 1
-ev3.speaker.beep(523.25, 500)
+ev3.speaker.beep(523.25, 500) # program start
 
-motors.straight(1000)
-motors.turn(90)
-motors.turn(90)
-motors.turn(90)
-motors.turn(90)
-while(button.pressed() == False):
-    x = 1
-ev3.speaker.beep(523.25, 500)
-motors.turn(-180)
-motors.straight(1000)
-# find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, 0, motors, ev3, button, sensor)
+
+startY = 0
+startX = 0
+
+finishY = 3
+finishX = 3
+
+find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, 0, motors, ev3, button, sensor)

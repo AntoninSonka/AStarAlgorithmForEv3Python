@@ -127,7 +127,7 @@ def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, 
     if is_in_list(neighborY, neighborX, openY, openX) == -1:
         parentListY[neighborY][neighborX] = currentY
         parentListX[neighborY][neighborX] = currentX
-        thisH = 0  # calculate_h_cost(neighborY, neighborX, finishY, finishX)
+        thisH = calculate_h_cost(neighborY, neighborX, finishY, finishX)
         thisG = calculate_g_cost(neighborY, neighborX, parentListY, parentListX, startY, startX)
         fCostList[neighborY][neighborX] = thisH + thisG
         if is_in_list(neighborY, neighborX, openY, openX) == -1:
@@ -142,7 +142,7 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
     closedX = []
     openY.append(startY)
     openX.append(startX)
-    thisH = 0  # calculate_h_cost(startY, startX, finishY, finishX)
+    thisH = calculate_h_cost(startY, startX, finishY, finishX)
     thisG = calculate_g_cost(startY, startX, parentListY, parentListX, startY, startX)
     fCostList[startY][startX] = thisH + thisG
     counter = 0
@@ -291,8 +291,8 @@ fCostList = [
 startY = 0
 startX = 0
 
-finishY = 1
-finishX = 0
+finishY = 3
+finishX = 3
 
 # levy = Motor(Port.A)
 # pravy = Motor(Port.D)
