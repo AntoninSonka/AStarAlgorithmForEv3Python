@@ -293,3 +293,8 @@ finishY = 3
 finishX = 3
 
 find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, 0, motors, ev3, button, sensor)
+
+ev3.speaker.beep(523.25, 250)
+ev3.speaker.beep(392.00, 250)
+ev3.speaker.beep(329.63, 250)
+ev3.speaker.beep(261.63, 250)
