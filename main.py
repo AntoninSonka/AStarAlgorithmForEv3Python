@@ -89,7 +89,7 @@ def get_lowest_f_x(openY, openX, fCostList, finishY, finishX):
     return returnX
 
 
-def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3):
+def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, button2, sensor, skipRide, ev3):
     if neighborY < 0 or neighborY >= SIZE_Y:
         return
     if neighborX < 0 or neighborX >= SIZE_X:
@@ -108,6 +108,10 @@ def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, 
         else:
             ev3.speaker.beep(523.25, 500)
             ev3.speaker.beep(261.63, 500)  # there isn't a wall
+            while button.pressed() == False:
+                if button2.pressed() == True:
+                    ev3.speaker.beep(392.00, 250)
+                    return
     else:
         if walls[neighborY][neighborX]:
             return
@@ -122,7 +126,7 @@ def calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, 
             openX.append(neighborX)
 
 
-def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, skipRide, motors, ev3, button, sensor):
+def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, skipRide, motors, ev3, button, button2, sensor):
     openY = []
     openX = []
     closedY = []
@@ -140,7 +144,7 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
         currentY = get_lowest_f_y(openY, openX, fCostList, finishY, finishX)
         currentX = get_lowest_f_x(openY, openX, fCostList, finishY, finishX)
         if skipRide == False:
-            ride_to_tile(openY, openX, closedY, closedX, currentY, currentX, oldCurrentY, oldCurrentX, motors, ev3, button, sensor)
+            ride_to_tile(openY, openX, closedY, closedX, currentY, currentX, oldCurrentY, oldCurrentX, motors, ev3, button, button2, sensor)
         index = is_in_list(currentY, currentX, openY, openX)
         openY.pop(index)           
         openX.pop(index)
@@ -154,22 +158,22 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
         # ev3.speaker.beep(523.25, 250)
         neighborY = currentY - 1
         neighborX = currentX
-        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3)
+        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, button2, sensor, skipRide, ev3)
         if skipRide == False:
             motors.turn(90)
         neighborY = currentY
         neighborX = currentX + 1
-        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3)
+        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, button2, sensor, skipRide, ev3)
         if skipRide == False:
             motors.turn(90)
         neighborY = currentY + 1
         neighborX = currentX
-        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3)
+        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, button2, sensor, skipRide, ev3)
         if skipRide == False:
             motors.turn(90)
         neighborY = currentY
         neighborX = currentX - 1
-        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, sensor, skipRide, ev3)
+        calculate_neighbour(currentY, currentX, neighborY, neighborX, openY, openX, closedY, closedX, walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, button, button2, sensor, skipRide, ev3)
         if skipRide == False:
             motors.turn(90)
         oldCurrentY = currentY
@@ -208,7 +212,7 @@ def find_path(walls, parentListY, parentListX, fCostList, startY, startX, finish
             b = 1
 
 
-def ride_to_tile(openY, openX, closedY, closedX, newStartY, newStartX, newFinishY, newFinishX, motors, ev3, button, sensor):
+def ride_to_tile(openY, openX, closedY, closedX, newStartY, newStartX, newFinishY, newFinishX, motors, ev3, button, button2, sensor):
     walls = [
             [1, 1, 1, 1],
             [1, 1, 1, 1],
@@ -239,7 +243,7 @@ def ride_to_tile(openY, openX, closedY, closedX, newStartY, newStartX, newFinish
         walls[closedY[i]][closedX[i]] = False
     walls[newStartY][newStartX] = False
     walls[newFinishY][newFinishX] = False
-    find_path(walls, parentListY, parentListX, fCostList, newStartY, newStartX, newFinishY, newFinishX, 1, motors, ev3, button, sensor)
+    find_path(walls, parentListY, parentListX, fCostList, newStartY, newStartX, newFinishY, newFinishX, 1, motors, ev3, button, button2, sensor)
 
 
 walls = [
@@ -276,6 +280,7 @@ motors.settings(900, 300, 80, 60)
 ev3 = EV3Brick()
 
 button = TouchSensor(Port.S2)
+button2 = TouchSensor(Port.S3)
 
 sensor = UltrasonicSensor(Port.S1)
 
@@ -287,14 +292,14 @@ ev3.speaker.beep(523.25, 500) # program start
 
 
 startY = 0
-startX = 0
+startX = 2
 
 finishY = 3
-finishX = 3
+finishX = 2
 
-find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, 0, motors, ev3, button, sensor)
+find_path(walls, parentListY, parentListX, fCostList, startY, startX, finishY, finishX, 0, motors, ev3, button, button2, sensor)
 
-ev3.speaker.beep(523.25, 250)
-ev3.speaker.beep(392.00, 250)
-ev3.speaker.beep(329.63, 250)
 ev3.speaker.beep(261.63, 250)
+ev3.speaker.beep(329.63, 250)
+ev3.speaker.beep(392.00, 250)
+ev3.speaker.beep(523.25, 250)
